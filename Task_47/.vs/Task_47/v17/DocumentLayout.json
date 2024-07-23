@@ -7,12 +7,12 @@
       "RelativeMoniker": "D:0:0:{B6765ACC-7001-4D37-96D3-04A9B1EB1B5B}|Task_47.csproj|solutionrelative:controllers\\formscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B6765ACC-7001-4D37-96D3-04A9B1EB1B5B}|Task_47.csproj|c:\\users\\acer\\desktop\\jovision-backend-tasks\\task_47\\models\\class.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B6765ACC-7001-4D37-96D3-04A9B1EB1B5B}|Task_47.csproj|solutionrelative:models\\class.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{B6765ACC-7001-4D37-96D3-04A9B1EB1B5B}|Task_47.csproj|c:\\users\\acer\\desktop\\jovision-backend-tasks\\task_47\\models\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B6765ACC-7001-4D37-96D3-04A9B1EB1B5B}|Task_47.csproj|solutionrelative:models\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B6765ACC-7001-4D37-96D3-04A9B1EB1B5B}|Task_47.csproj|c:\\users\\acer\\desktop\\jovision-backend-tasks\\task_47\\models\\class.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B6765ACC-7001-4D37-96D3-04A9B1EB1B5B}|Task_47.csproj|solutionrelative:models\\class.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,7 +26,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Class.cs",
               "DocumentMoniker": "C:\\Users\\ACER\\Desktop\\Jovision-Backend-Tasks\\Task_47\\Models\\Class.cs",
               "RelativeDocumentMoniker": "Models\\Class.cs",
@@ -45,14 +45,14 @@
               "RelativeDocumentMoniker": "Controllers\\FormsController.cs",
               "ToolTip": "C:\\Users\\ACER\\Desktop\\Jovision-Backend-Tasks\\Task_47\\Controllers\\FormsController.cs",
               "RelativeToolTip": "Controllers\\FormsController.cs",
-              "ViewState": "AQIAAF8AAAAAAAAAAAAmwGwAAABRAAAA",
+              "ViewState": "AQIAAPoAAAAAAAAAAAAIwAgBAAAtAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-22T09:54:00.403Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Class1.cs",
               "DocumentMoniker": "C:\\Users\\ACER\\Desktop\\Jovision-Backend-Tasks\\Task_47\\Models\\Class1.cs",
               "RelativeDocumentMoniker": "Models\\Class1.cs",

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
@@ -166,6 +167,120 @@ namespace Task_47.Controllers
             public DateTime creationTime;
             public DateTime lastModified;
         }
+
+        [HttpPost("~/Update")]
+        public async Task<ActionResult> Update([FromForm] Form form)
+        {
+            if (form == null)
+                return BadRequest();
+
+            if (form.Img == null || form.Img.Length == 0)
+                return BadRequest("No file selected");
+
+            var extension = Path.GetExtension(form.Img.FileName).ToLowerInvariant();
+
+            if (string.IsNullOrEmpty(extension) || (extension != ".png" && extension != ".jpg" && extension != ".jpeg"))
+                return BadRequest("Invalid file type");
+
+            // Check if there are files uploaded before
+            var files = Directory.GetFiles("uploads/");
+            if (files.Length == 0)
+                return BadRequest("No files uploaded yet");
+
+            // Search for the owner provided in the uploaded files
+            bool ownerExist = false;
+            string fileName = "";
+            MetaData imgMetaData = new MetaData();
+            foreach (var file in files)
+            {
+                // read all the metadata files
+                var fileExtention = Path.GetExtension(file).ToLowerInvariant();
+                if (fileExtention.CompareTo(".json") == 0)
+                {
+                    using (StreamReader sr = new StreamReader(file))
+                    {
+                        string json = sr.ReadToEnd();
+                        MetaData metaData = JsonConvert.DeserializeObject<MetaData>(json);
+                        if (metaData.owner.CompareTo(form.Owner) == 0)
+                        {
+                            // save the metadata
+                            imgMetaData = metaData;
+                            ownerExist = true;
+                            fileName = file;
+                        }
+                    }
+                }
+            }
+
+                if(!ownerExist)
+                    return BadRequest("There are no files uploaded with the owner: " + form.Owner);
+
+                // delete the old image and metdadata files
+                System.IO.File.Delete(fileName);
+                System.IO.File.Delete(fileName.Substring(0,fileName.LastIndexOf('.')) + ".png");
+
+
+            // save the uploaded image
+            using (var stream = new FileStream("uploads/" + form.Img.FileName, FileMode.Create))
+                {
+                    await form.Img.CopyToAsync(stream);
+                }
+
+                // create the metadata json file and save the information then update the modification time
+                JObject metaDataJSON = new JObject(
+                    new JProperty("owner", form.Owner),
+                    new JProperty("creationTime", imgMetaData.creationTime),
+                    new JProperty("modificationTime", DateTime.Now)
+                    );
+
+                System.IO.File.WriteAllText("uploads/" + form.Img.FileName.Substring(0, form.Img.FileName.LastIndexOf('.')) + ".json", metaDataJSON.ToString());
+
+                return Ok("File: " + fileName + " is replaced by: " + form.Img.FileName + " and metadata created.");
+            }
+
+        [HttpGet("~/Retrieve")]
+        public async Task<ActionResult> Retrieve(string fileName = "", string fileOwner = "")
+        {
+            if (fileName.Length == 0) return BadRequest("No file name specified");
+            if (fileOwner.Length == 0) return BadRequest("No file owner specified");
+
+            var files = Directory.GetFiles("uploads/", fileName + ".*");
+
+            // no files with the given name
+            if (files.Length == 0)
+                return BadRequest("File not found");
+
+            bool sameOwner = false;
+            string uploadFileName = "";
+            foreach (var file in files)
+            {
+                if (Path.GetExtension(file).CompareTo(".json") == 0)
+                {
+                    using (StreamReader sr = new StreamReader(file))
+                    {
+                        string json = sr.ReadToEnd();
+                        MetaData metadata = JsonConvert.DeserializeObject<MetaData>(json);
+                        if (metadata.owner.CompareTo(fileOwner) == 0)
+                        {
+                            sameOwner = true;
+                            uploadFileName = file.Substring(0, file.LastIndexOf("."));
+                        }
+                    }
+                }
+            }
+
+            if (!sameOwner)
+                return BadRequest("The owner specified is not the same as the owner of the file");
+
+            Stream stream = System.IO.File.OpenRead(uploadFileName + ".png");
+
+            // return the file in the respone body
+            return new FileStreamResult(stream, "application/octet-stream");
+            
+
+        }
+            
+
 
 
         // POST: api/Forms
