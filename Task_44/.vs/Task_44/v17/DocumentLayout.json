@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\ACER\\Desktop\\Jovision-Backend-Tasks\\Task_44\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{42BFC3B4-B008-43B3-A59A-1BA8ED010355}|Task_44.csproj|c:\\users\\acer\\desktop\\jovision-backend-tasks\\task_44\\controllers\\birthdatecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{42BFC3B4-B008-43B3-A59A-1BA8ED010355}|Task_44.csproj|solutionrelative:controllers\\birthdatecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{42BFC3B4-B008-43B3-A59A-1BA8ED010355}|Task_44.csproj|c:\\users\\acer\\desktop\\jovision-backend-tasks\\task_44\\models\\class.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{42BFC3B4-B008-43B3-A59A-1BA8ED010355}|Task_44.csproj|solutionrelative:models\\class.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{42BFC3B4-B008-43B3-A59A-1BA8ED010355}|Task_44.csproj|c:\\users\\acer\\desktop\\jovision-backend-tasks\\task_44\\controllers\\greeter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{42BFC3B4-B008-43B3-A59A-1BA8ED010355}|Task_44.csproj|solutionrelative:controllers\\greeter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "BirthDateController.cs",
+              "DocumentMoniker": "C:\\Users\\ACER\\Desktop\\Jovision-Backend-Tasks\\Task_44\\Controllers\\BirthDateController.cs",
+              "RelativeDocumentMoniker": "Controllers\\BirthDateController.cs",
+              "ToolTip": "C:\\Users\\ACER\\Desktop\\Jovision-Backend-Tasks\\Task_44\\Controllers\\BirthDateController.cs",
+              "RelativeToolTip": "Controllers\\BirthDateController.cs",
+              "ViewState": "AQIAAEwAAAAAAAAAAAAkwFsAAAA4AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-22T08:09:43.746Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Class.cs",
+              "DocumentMoniker": "C:\\Users\\ACER\\Desktop\\Jovision-Backend-Tasks\\Task_44\\Models\\Class.cs",
+              "RelativeDocumentMoniker": "Models\\Class.cs",
+              "ToolTip": "C:\\Users\\ACER\\Desktop\\Jovision-Backend-Tasks\\Task_44\\Models\\Class.cs",
+              "RelativeToolTip": "Models\\Class.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAnAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-22T08:05:41.979Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Greeter.cs",
+              "DocumentMoniker": "C:\\Users\\ACER\\Desktop\\Jovision-Backend-Tasks\\Task_44\\Controllers\\Greeter.cs",
+              "RelativeDocumentMoniker": "Controllers\\Greeter.cs",
+              "ToolTip": "C:\\Users\\ACER\\Desktop\\Jovision-Backend-Tasks\\Task_44\\Controllers\\Greeter.cs",
+              "RelativeToolTip": "Controllers\\Greeter.cs",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAAACcAAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-22T06:56:26.989Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
