@@ -230,3 +230,8 @@ C:\Users\ACER\Desktop\Jovision-Backend-Tasks\Task_47\obj\Debug\net8.0\Task_47.pd
 C:\Users\ACER\Desktop\Jovision-Backend-Tasks\Task_47\obj\Debug\net8.0\Task_47.genruntimeconfig.cache
 C:\Users\ACER\Desktop\Jovision-Backend-Tasks\Task_47\obj\Debug\net8.0\ref\Task_47.dll
 C:\Users\ACER\Desktop\Jovision-Backend-Tasks\Task_47\bin\Debug\net8.0\uploads\poster.json
+C:\Users\ACER\Desktop\Jovision-Backend-Tasks\Task_47\bin\Debug\net8.0\Task_47.xml
+C:\Users\ACER\Desktop\Jovision-Backend-Tasks\Task_47\obj\Debug\net8.0\Task_47.xml
+C:\Users\ACER\Desktop\Jovision-Backend-Tasks\Task_47\bin\Debug\net8.0\uploads\Screenshot 2024-06-16 094625.json
+C:\Users\ACER\Desktop\Jovision-Backend-Tasks\Task_47\bin\Debug\net8.0\uploads\Screenshot 2024-06-16 094707.json
+C:\Users\ACER\Desktop\Jovision-Backend-Tasks\Task_47\bin\Debug\net8.0\uploads\Screenshot 2024-07-15 193429.json

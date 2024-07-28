@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Task_47</name>
+    </assembly>
+    <members>
+        <member name="T:Task_47.Controllers.FormsController.FilterType">
+            <summary>
+            Filter Type &#xA;
+            0 - Modification Date &#xA;
+            1 - Creation Date Desc &#xA;
+            2 - Creation Date Asc &#xA;
+            3 - Owner
+            </summary>
+        </member>
+        <member name="M:Task_47.Controllers.FormsController.Filter(System.String,System.String,System.String,Task_47.Controllers.FormsController.FilterType)">
+            <summary>
+            
+            </summary>
+            <param name="creationTime"></param>
+            <param name="lastModificationTime"></param>
+            <param name="owner"></param>
+            <param name="filter"></param>
+            <remarks>
+            Creation Time and Modification Time format should be the following:&#xA;
+            YYYY MM DD HH MM SS    or&#xA;
+            YYYY MM DD&#xA;
+            the numbers should be seperated by a space
+            </remarks>
+            <returns></returns>
+        </member>
+        <member name="M:Task_47.Controllers.FormsController.FilterByCreationTime(System.Boolean,System.DateTime,System.Collections.Generic.List{Task_47.Controllers.FormsController.FileInfo})">
+            <summary>
+            given a sort order, a date and a list of FileInfo Json objects
+            return all the elements in the list that have a creationTime after the given creation tiem
+            sorted in an ascending or descending order
+            </summary>
+            <param name="ascending"></param>
+            <param name="creationTime"></param>
+            <param name="allFilesJson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Task_47.Controllers.FormsController.FilterByModificationTime(System.DateTime,System.Collections.Generic.List{Task_47.Controllers.FormsController.FileInfo})">
+            <summary>
+            given a modification time and a list of FileInfo 
+            return all the elements in the list that have a been modified after the given modification time
+            </summary>
+            <param name="modificationTime"></param>
+            <param name="allFilesJson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Task_47.Controllers.FormsController.FilterByOwner(System.String,System.Collections.Generic.List{Task_47.Controllers.FormsController.FileInfo})">
+            <summary>
+            given an owner and a list of FileInfo
+            return all the elements in the list that have the same owner as the given one
+            </summary>
+            <param name="owner"></param>
+            <param name="allFilesJson"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Task_47.Controllers.FormsController.TransferOwnership(System.String,System.String)">
+            <summary>
+            </summary>
+            <param name="oldOwner"></param>
+            <param name="newOwner"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

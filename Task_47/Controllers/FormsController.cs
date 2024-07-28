@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -19,6 +21,39 @@ namespace Task_47.Controllers
     public class FormsController : ControllerBase
     {
         private readonly FormContext _context;
+
+        // Filter Type enum
+        /// <summary>
+        /// Filter Type &#xA;
+        /// 0 - Modification Date &#xA;
+        /// 1 - Creation Date Desc &#xA;
+        /// 2 - Creation Date Asc &#xA;
+        /// 3 - Owner
+        /// </summary>
+        public enum FilterType
+        {
+            ByModificatonDate = 0,
+            ByCreationDateDescending = 1,
+            ByCreationDateAscending = 2,
+            ByOwner = 3
+        }
+
+        // json metadata type
+        public class MetaData
+        {
+            public string owner;
+            public DateTime creationTime;
+            public DateTime modificationTime;
+        }
+
+        public class FileInfo
+        {
+            public string filename;
+            public string owner;
+            public DateTime creationTime;
+            public DateTime lastModified;
+        }
+        
 
         public FormsController(FormContext context)
         {
@@ -77,6 +112,7 @@ namespace Task_47.Controllers
             return NoContent();
         }
 
+        // POST : Create 
         [HttpPost("~/Create")]
         public async Task<ActionResult> Create([FromForm] Form form)
         {
@@ -111,6 +147,7 @@ namespace Task_47.Controllers
 
         }
 
+        // GET Delete
         [HttpGet("~/Delete")]
         public async Task<ActionResult> Delete(string fileName = "", string owner = "")
         {
@@ -160,14 +197,8 @@ namespace Task_47.Controllers
 
         }
 
-        // json metadata type
-        public class MetaData
-        {
-            public string owner;
-            public DateTime creationTime;
-            public DateTime lastModified;
-        }
 
+        // POST Update
         [HttpPost("~/Update")]
         public async Task<ActionResult> Update([FromForm] Form form)
         {
@@ -238,6 +269,8 @@ namespace Task_47.Controllers
                 return Ok("File: " + fileName + " is replaced by: " + form.Img.FileName + " and metadata created.");
             }
 
+
+        // GET Retrieve
         [HttpGet("~/Retrieve")]
         public async Task<ActionResult> Retrieve(string fileName = "", string fileOwner = "")
         {
@@ -279,8 +312,251 @@ namespace Task_47.Controllers
             
 
         }
-            
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="creationTime"></param>
+        /// <param name="lastModificationTime"></param>
+        /// <param name="owner"></param>
+        /// <param name="filter"></param>
+        /// <remarks>
+        /// Creation Time and Modification Time format should be the following:&#xA;
+        /// YYYY MM DD HH MM SS    or&#xA;
+        /// YYYY MM DD&#xA;
+        /// the numbers should be seperated by a space
+        /// </remarks>
+        /// <returns></returns>
+        // POST Filter
+        [HttpPost("~/Filter")]
+        public async Task<ActionResult> Filter([FromForm] string creationTime, [FromForm] string lastModificationTime, [FromForm] string owner,[FromForm] FilterType filter)
+        {
+            if (!DateTime.TryParse(creationTime, out DateTime ct))
+                return BadRequest("Please enter the creation time in the correct format");
+
+            if (!DateTime.TryParse(lastModificationTime, out DateTime lmt))
+                return BadRequest("Please enter the last modification time in the correct format");
+
+            if (owner == null)
+                return BadRequest("Please enter an owner");
+
+            var files = Directory.GetFiles("uploads");
+
+            if (files.Length == 0)
+                return Ok("there are no files uploaded yet");
+
+            List<FileInfo> filesInfoArr = new List<FileInfo>();
+
+            foreach (var file in files)
+            {
+                
+                if (Path.GetExtension(file).CompareTo(".json") == 0)
+                {
+                    using (StreamReader sr = new StreamReader(file))
+                    {
+                        string json = sr.ReadToEnd();
+                        MetaData metadata = JsonConvert.DeserializeObject<MetaData>(json);
+                        FileInfo fi = new FileInfo();
+                        fi.creationTime = metadata.creationTime;
+                        fi.lastModified = metadata.modificationTime;
+                        fi.owner = metadata.owner;
+                        fi.filename = file.Substring(0,file.LastIndexOf('.'));
+
+                        filesInfoArr.Add(fi);
+                    }
+                }
+            }
+            Console.WriteLine(filesInfoArr[0].filename);
+            List<FileInfo> outputJsonArr;
+            switch (filter)
+            {
+                case FilterType.ByModificatonDate:
+                    {
+                        outputJsonArr = FilterByModificationTime(lmt, filesInfoArr);
+                        if (outputJsonArr.Count == 0)
+                            return Ok("There are no files modified after: " + lastModificationTime);
+                    }
+                    break;
+                case FilterType.ByCreationDateDescending:
+                    {
+                        outputJsonArr = FilterByCreationTime(false,ct, filesInfoArr);
+                        if (outputJsonArr.Count == 0)
+                            return Ok("There are no files created after: " + creationTime);
+                    }
+                    break;
+                case FilterType.ByCreationDateAscending:
+                    {
+                        outputJsonArr = FilterByCreationTime(true, ct, filesInfoArr);
+                        if (outputJsonArr.Count == 0)
+                            return Ok("There are no files created after: " + creationTime);
+                    }
+                    break;
+                case FilterType.ByOwner:
+                    {
+                        outputJsonArr = FilterByOwner(owner, filesInfoArr);
+                        if (outputJsonArr.Count == 0)
+                            return Ok("There are no files that are owned by: " + owner);
+                    }
+                    break;
+                default:
+                    {
+                        outputJsonArr = new List<FileInfo>();
+                    }
+                    break;
+            }
+
+            // select only the file name and owner in the list
+            var finalJson = outputJsonArr.Select(f => new {FileName = f.filename, Owner = f.owner});
+
+            // cast the list back into json
+            string jsonStr = JsonConvert.SerializeObject(finalJson, Formatting.Indented);
+
+            return Ok(jsonStr);
+        }
+        
+        /// <summary>
+        /// given a sort order, a date and a list of FileInfo Json objects
+        /// return all the elements in the list that have a creationTime after the given creation tiem
+        /// sorted in an ascending or descending order
+        /// </summary>
+        /// <param name="ascending"></param>
+        /// <param name="creationTime"></param>
+        /// <param name="allFilesJson"></param>
+        /// <returns></returns>
+        private List<FileInfo> FilterByCreationTime(bool ascending, DateTime creationTime, List<FileInfo> allFilesJson)
+        {
+
+            for (int i = 0; i < allFilesJson.Count; i++)
+            {
+                // if the file creation time is before the given creation time
+                if(allFilesJson.ElementAt(i).creationTime.CompareTo(creationTime) < 0)
+                {
+                    // remove it from the array
+                    allFilesJson.RemoveAt(i);
+                    i--;
+                }    
+            }
+            
+            // order the list
+            if (!ascending)
+            {
+                return allFilesJson.OrderByDescending(x => x.creationTime).ToList();
+            }
+            else
+            {
+                return allFilesJson.OrderBy(x => x.creationTime).ToList();
+            }
+
+        }
+
+        /// <summary>
+        /// given a modification time and a list of FileInfo 
+        /// return all the elements in the list that have a been modified after the given modification time
+        /// </summary>
+        /// <param name="modificationTime"></param>
+        /// <param name="allFilesJson"></param>
+        /// <returns></returns>
+        private List<FileInfo> FilterByModificationTime(DateTime modificationTime, List<FileInfo> allFilesJson)
+        {
+            for (int i = 0; i < allFilesJson.Count; i++)
+            {
+                // if the file modification time is before the given modification time
+                if (allFilesJson.ElementAt(i).lastModified.CompareTo(modificationTime) < 0)
+                {
+                    // remove it from the array
+                    allFilesJson.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            return allFilesJson;
+
+        }
+
+        /// <summary>
+        /// given an owner and a list of FileInfo
+        /// return all the elements in the list that have the same owner as the given one
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="allFilesJson"></param>
+        /// <returns></returns>
+        private List<FileInfo> FilterByOwner(string owner, List<FileInfo> allFilesJson)
+        {
+            // remove the elements where the owners dont match
+            for (int i = 0; i < allFilesJson.Count; i++)
+            {
+                // if the file owner is not the same as the given owner
+                if (allFilesJson.ElementAt(i).owner.CompareTo(owner) != 0)
+                {
+                    allFilesJson.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            return allFilesJson;
+        }
+
+
+        /// <summary>
+        /// </summary>
+        /// <param name="oldOwner"></param>
+        /// <param name="newOwner"></param>
+        /// <returns></returns>
+        [HttpGet("~/TransferOwnership")]
+        public async Task<ActionResult> TransferOwnership(string oldOwner, string newOwner)
+        {
+            if(oldOwner == null || newOwner == null)
+                 return BadRequest("Please provide an owner");
+
+            var files = Directory.GetFiles("uploads");
+
+            if(files.Length == 0)
+                return Ok("there are no files uploaded yet");
+
+            List<FileInfo> allFiles = new List<FileInfo>();
+            foreach (var file in files)
+            {
+                // if the file is a JSON file
+                if(Path.GetExtension(file).ToLowerInvariant().CompareTo(".json") == 0)
+                {
+                    using (StreamReader sr = new StreamReader(file))
+                    {
+                        string json = sr.ReadToEnd();
+                        MetaData metadata = JsonConvert.DeserializeObject<MetaData>(json);
+                        if(metadata != null && metadata.owner.CompareTo(oldOwner) == 0)
+                        {
+                            metadata.owner = newOwner;
+                            FileInfo fi = new FileInfo();
+                            fi.filename = file.Substring(0, file.LastIndexOf('.'));
+                            fi.owner = metadata.owner;
+                            fi.creationTime = metadata.creationTime;
+                            fi.lastModified = metadata.modificationTime;
+                            allFiles.Add(fi);
+                            sr.Close();
+                            System.IO.File.WriteAllText(file,JsonConvert.SerializeObject(metadata,Formatting.Indented).ToString());
+                        }
+                         // old files that are owned by the given new owner
+                        else if(metadata != null && metadata.owner.CompareTo(newOwner) == 0)
+                        {
+                            FileInfo fi = new FileInfo();
+                            fi.filename = file.Substring(0, file.LastIndexOf('.'));
+                            fi.owner = metadata.owner;
+                            fi.creationTime = metadata.creationTime;
+                            fi.lastModified = metadata.modificationTime;
+                            allFiles.Add(fi);
+                        }
+                    }
+                }
+            }
+
+            if(allFiles.Count == 0)
+                return Ok("there are no files owned by: " + oldOwner + " or " +  newOwner);
+
+            var jsonOutput = allFiles.Select(x => new { FileName = x.filename, Owner = x.owner, });
+            string jsonStr = JsonConvert.SerializeObject(jsonOutput, Formatting.Indented);
+            return Ok(jsonStr);
+        }
 
 
         // POST: api/Forms
